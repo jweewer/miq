@@ -1,7 +1,9 @@
 ---
 - hosts: localhost
   tasks:
-  - name: Install HTTPd server
-    yum:
-      state: latest
-      name: httpd
+  - name: Create a file in /tmp
+    file:
+      path: /tmp/file12345
+      owner: root
+      group: root
+      mode: 0660
