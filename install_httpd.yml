@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  task:
+  - name: Install HTTPd server
+    yum:
+    - state: latest
+      name: httpd
