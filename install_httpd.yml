@@ -3,5 +3,5 @@
   tasks:
   - name: Install HTTPd server
     yum:
-    - state: latest
+      state: latest
       name: httpd
