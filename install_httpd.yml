@@ -1,6 +1,7 @@
 ---
 - hosts: all 
-  tasks:
+  become: yes
+ tasks:
   - name: Create a file in /tmp
     file:
       path: /tmp/file12345
@@ -8,5 +9,3 @@
       group: ansible
       mode: 0660
       state: touch
-    become: true
-    become_user: root 
