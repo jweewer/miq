@@ -4,7 +4,7 @@
   - name: Create a file in /tmp
     file:
       path: /tmp/file12345
-      owner: ansible
+      owner: root 
       group: ansible
       mode: 0660
       state: touch
