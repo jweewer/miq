@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: al 
   tasks:
   - name: Create a file in /tmp
     file:
