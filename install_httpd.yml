@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Create a file in /tmp
+    file:
+      path: /tmp/file12345
+      owner: root
+      group: root
+      mode: 0660
+      state: touch
+    become: true 
