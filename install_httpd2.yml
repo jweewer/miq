@@ -4,10 +4,13 @@
     placeholder: 'default text'
   become: yes
   tasks:
-  - name: Install apache
+  - name: Install apache and some needed packages
     yum:
       state: latest
-      name: httpd
+      name: {{ item }}
+    with_items:
+      - httpd
+      - libselinux-python
   - name: enable and start httpd
     service:
       name: httpd
