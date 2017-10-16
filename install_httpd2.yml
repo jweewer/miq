@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  var:
+    placeholder: 'default text'
   become: yes
   tasks:
   - name: Install apache
@@ -11,4 +13,9 @@
       name: httpd
       enabled: yes
       state: started
-    
+  - name: put new index.html
+    template:
+      src: index.j2
+      dest: /var/www/html/index.html
+      mode: 0644
+   
