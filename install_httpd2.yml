@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars:
-    placeholder: 'cf_placeholder' 
+    placeholder: '{{ cf_placeholder }}' 
   become: yes
   tasks:
   - name: Install apache and some needed packages
