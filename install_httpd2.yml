@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  var:
+  vars:
     placeholder: 'default text'
   become: yes
   tasks:
