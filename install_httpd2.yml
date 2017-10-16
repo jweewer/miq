@@ -7,7 +7,7 @@
   - name: Install apache and some needed packages
     yum:
       state: latest
-      name: {{ item }}
+      name: '{{ item }}'
     with_items:
       - httpd
       - libselinux-python
