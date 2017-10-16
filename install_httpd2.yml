@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars:
-    placeholder: 'default text'
+    placeholder: 'cf_placeholder' 
   become: yes
   tasks:
   - name: Install apache and some needed packages
