@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars:
-      dbname: '{{ cf_databasename }}'
+      dbname: '{{ cf_dbname }}'
       dbusername: '{{ cf_dbusername }}'
       dbuserpw: '{{ cf_dbuserpw }}'
   tasks:
