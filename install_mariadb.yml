@@ -28,4 +28,4 @@
       password: '{{ dbuserpw }}'
       host: localhost
       state: present
-      priv: "'{{ dbname }}'.*:USAGE"
+      priv: "{{ dbname }}.*:USAGE"
