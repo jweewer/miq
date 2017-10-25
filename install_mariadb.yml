@@ -36,7 +36,7 @@
       state: absent
     with_items:
       - localhost
-      - {{ inventory_hostname }}
+      - '{{ inventory_hostname }}'
   - name: remove test database
     mysql_db:
       name: test
