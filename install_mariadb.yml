@@ -12,6 +12,7 @@
     with_items:
       - mariadb
       - mariadb-server
+      - MySQL-python
   - name: enable and start mariadb
     service:
       name: mariadb
