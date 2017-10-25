@@ -1,0 +1,30 @@
+---
+- hosts: all
+  vars:
+      dbname: '{{ cf_databasename }}'
+      dbusername: '{{ cf_dbusername }}'
+      dbuserpw: '{{ cf_dbuserpw }}'
+  tasks:
+  - name: install mariadb
+    yum:
+      state: latest
+      name: '{{ item }}'
+    with_items:
+      - mariadb
+      - mariadb-server
+  - name: enable and start mariadb
+    service:
+      name: mariadb
+      state: started
+      enabled: yes
+  - name: create user specified database
+    mysql_db:
+      name: '{{ dbname }}'
+      state: present
+  - name: create user with correct privileges
+    mysql_user:
+      name: '{{ dbusername }}'
+      password: '{{ dbuserpw }}'
+      host: localhost
+      state: present
+      priv: "'{{ dbname }}'.*:USAGE"

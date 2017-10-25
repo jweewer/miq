@@ -21,4 +21,3 @@
       src: index.j2
       dest: /var/www/html/index.html
       mode: 0644
-   
