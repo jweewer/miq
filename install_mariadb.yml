@@ -32,7 +32,7 @@
   - name: remove anonymous user
     mysql_user:
       name: ''
-      host: {{ item }}
+      host: '{{ item }}'
       state: absent
     with_items:
       - localhost
