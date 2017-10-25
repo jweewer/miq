@@ -23,6 +23,17 @@
       name: mariadb
       state: started
       enabled: yes
+  - name: update all root accounts on instance
+    mysql_user:
+      name: root
+      password: '{{ rootpw }}'
+      host: '{{ item }}'
+    with_items:
+      - localhost
+      - 127.0.0.1
+      - ::1
+      - '{{ inventory_hostname }}'
+
   - name: Copy my.cnf to system
     template:
       src: my.j2
