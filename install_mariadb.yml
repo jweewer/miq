@@ -43,17 +43,6 @@
       - 127.0.0.1
       - ::1
       - '{{ ansible_hostname }}'
-  - name: create user specified database
-    mysql_db:
-      name: '{{ dbname }}'
-      state: present
-  - name: create user with correct privileges
-    mysql_user:
-      name: '{{ dbusername }}'
-      password: '{{ dbuserpw }}'
-      host: localhost
-      priv: "{{ dbname }}.*:ALTER,SELECT,UPDATE,CREATE,DELETE,DROP"
-      state: present
   - name: remove anonymous user
     mysql_user:
       name: ''
@@ -66,3 +55,14 @@
     mysql_db:
       name: test
       state: absent
+  - name: create user specified database
+    mysql_db:
+      name: '{{ dbname }}'
+      state: present
+  - name: create user with correct privileges
+    mysql_user:
+      name: '{{ dbusername }}'
+      password: '{{ dbuserpw }}'
+      host: localhost
+      priv: "{{ dbname }}.*:ALTER,SELECT,UPDATE,CREATE,DELETE,DROP"
+      state: present
