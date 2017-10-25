@@ -5,7 +5,7 @@
       dbusername: '{{ cf_dbusername }}'
       dbuserpw: '{{ cf_dbuserpw }}'
   tasks:
-  - name: install mariadb
+  - name: install mariadb and components
     yum:
       state: latest
       name: '{{ item }}'
@@ -27,5 +27,5 @@
       name: '{{ dbusername }}'
       password: '{{ dbuserpw }}'
       host: localhost
+      priv: "{{ dbname }}.*:USAGE"
       state: present
-      priv: "*.*:USAGE"
