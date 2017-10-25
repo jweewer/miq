@@ -38,11 +38,11 @@
     mysql_user:
       name: root
       password: '{{ rootpw }}'
-      host: localhost
+      host: '{{ item }}'
     with_items:
       - 127.0.0.1
       - ::1
-      - '{{ inventory_hostname }}'
+      - '{{ ansible_hostname }}'
   - name: create user specified database
     mysql_db:
       name: '{{ dbname }}'
