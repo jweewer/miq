@@ -4,7 +4,7 @@
       username: '{{ cf_username }}'
       fullname: '{{ cf_fullname }}'
       password: '{{ cf_password }}'
-#      sudoers: '{{ cf_sudoers }}'
+      sudoers: '{{ cf_sudoers }}'
 
   tasks:
   - name: create the user
@@ -15,8 +15,8 @@
       password: '{{ password }}'
       update_password: always
       createhome: yes
-#  - name: add user to sudoers.d directory
-#    template:
-#        src: sudoers.j2
-#        dest: /etc/sudoers.d/'{{ username }}'.conf
-#    when: sudoers
+  - name: add user to sudoers.d directory
+    template:
+        src: sudoers.j2
+        dest: /etc/sudoers.d/'{{ username }}'.conf
+    when: sudoers
