@@ -29,3 +29,15 @@
       host: localhost
       priv: "{{ dbname }}.*:ALTER,SELECT,UPDATE,CREATE,DELETE,DROP"
       state: present
+  - name: remove anonymous user
+    mysql_user:
+      name: ''
+      host: {{ item }}
+      state: absent
+    with_items:
+      - localhost
+      - {{ inventory_hostname }}
+  - name: remove test database
+    mysql_db:
+      name: test
+      state: absent
