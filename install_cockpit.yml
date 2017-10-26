@@ -1,0 +1,31 @@
+---
+- hosts: all
+  tasks:
+  - name: Install cockpit
+    yum:
+      state: latest
+      name:  '{{ item }}'
+    with_items:
+      - cockpit-bridge.x86_64
+      - cockpit-dashboard.x86_64
+      - cockpit-doc.x86_64
+      - cockpit-docker.x86_64
+      - cockpit-kdump.noarch
+      - cockpit-kubernetes.x86_64
+      - cockpit-machines.x86_64
+      - cockpit-networkmanager.noarch
+      - cockpit-packagekit.x86_64
+      - cockpit-pcp.x86_64
+      - cockpit-selinux.noarch
+      - cockpit-sosreport.noarch
+      - cockpit-storaged.noarch
+      - cockpit-subscriptions.noarch
+      - cockpit-system.noarch
+      - cockpit-tests.x86_64
+      - cockpit-ws.x86_64
+      - cockpit.x86_64
+    - name: Enable and start cockpit
+      service:
+        name: cockpit
+        enabled: yes
+        state: started
