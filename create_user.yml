@@ -21,4 +21,4 @@
     template:
         src: sudoers.j2
         dest: /etc/sudoers.d/'{{ username }}'.conf
-    when: {{ sudoers|bool }} == true
+    when: {{ sudoers|bool }}
