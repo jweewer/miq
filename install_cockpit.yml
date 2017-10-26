@@ -24,8 +24,8 @@
       - cockpit-tests.x86_64
       - cockpit-ws.x86_64
       - cockpit.x86_64
-    - name: Enable and start cockpit
-      service:
-        name: cockpit
-        enabled: yes
-        state: started
+  - name: Enable and start cockpit
+    service:
+      name: cockpit
+      enabled: yes
+      state: started
