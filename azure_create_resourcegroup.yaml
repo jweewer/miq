@@ -3,7 +3,7 @@
     hosts: localhost
     connection: local
     vars:
-      resourcegroup: {{ cf_resourcegroup }}
+      resourcegroup: '{{ cf_resourcegroup }}'
     tasks:
     - name: Create resourcegroup on azure cloud
       azure_rm_resourcegroup:
