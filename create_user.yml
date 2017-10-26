@@ -7,14 +7,12 @@
       sudoers: '{{ cf_sudoers }}'
 
   tasks:
-  - debug:
-      var: sudoers
   - name: create the user
     user:
       name: '{{ username }}'
       shell: /bin/bash
       comment: '{{ fullname }}'
-      password: '{{ password }}'
+      password: '{{ password | passsword_hash('sha512') }}'
       update_password: always
       createhome: yes
   - name: add user to sudoers.d directory
