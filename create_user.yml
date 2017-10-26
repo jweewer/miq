@@ -15,8 +15,9 @@
       password: "{{ password | password_hash('sha512') }}"
       update_password: always
       createhome: yes
+      state: present
   - name: add user to sudoers.d directory
     template:
         src: sudoers.j2
-        dest: /etc/sudoers.d/{{ username }}.conf
+        dest: /etc/sudoers.d/{{ username }}
     when: sudoers == 'true'
