@@ -1,0 +1,130 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+  },
+  "variables": {
+    "vmnicName": "JacNic",
+    "vmnetName": "JacNetwork",
+    "vmnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmnetName'))]",
+    "subnetName": "JacSubnet",
+    "secgrpName": "JacSecurityGroup"
+  },
+  "resources": [
+  {
+    "apiVersion": "2015-06-15",
+    "type": "Microsoft.Network/virtualNetworks",
+    "name": "[variables('vmnetName')]",
+    "location": "[resourceGroup().location]",
+    "dependson": [
+      "[concat('Microsoft.Network/networkSecurityGroups/', variables('secgrpName'))]"
+    ],
+    "properties": {
+      "addressSpace": {
+        "addressPrefixes": [
+          "172.16.2.0/24"
+        ]
+      },
+      "subnets": [
+        {
+          "name": "[variables('subnetName')]",
+          "properties": {
+            "addressPrefix": "172.16.2.0/24",
+            "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('secgrpName'))]"
+            }
+          }
+        }
+      ],
+      "dhcpOptions": {
+        "dnsServers": [ "172.16.2.2" ]
+      }
+    }
+  },
+  {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('secgrpName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NetworkSecurityGroup"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "SSH",
+            "properties": {
+              "protocol": "TCP",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "2015-06-15",
+    "type": "Microsoft.Network/networkInterfaces",
+    "name": "[variables('vmnicName')]",
+    "location": "[resourceGroup().location]",
+    "dependsOn": [
+      "[concat('Microsoft.Network/virtualNetworks/', variables('vmnetName'))]"
+      ],
+    "properties": {
+      "ipConfigurations": [
+        {
+          "name": "ipconfig1",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vmnetID'), '/subnets/', variables('subnetName'))]"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "2015-06-15",
+    "type": "Microsoft.Compute/virtualMachines",
+    "name": "JacVMthing",
+    "location": "[resourceGroup().location]",
+    "dependsOn": [
+      "[concat('Microsoft.Network/networkInterfaces/', variables('vmnicName'))]"
+      ],
+    "properties": {
+      "hardwareProfile": {
+        "vmSize": "basic_A0"
+      },
+      "storageProfile": {
+        "osDisk": {
+          "name": "JacVMthing-osDisk",
+          "osType": "linux",
+          "caching": "ReadWrite",
+          "createOption": "FromImage",
+          "image": {
+            "uri": "https://proxycustomimages.blob.core.windows.net/customimage/centos-guest-image-7.4-x86_64.vhd"
+          },
+          "vhd": {
+            "uri": "[variables('osDiskVhdName')]"
+          }
+        }
+      },
+      "networkProfile": {
+        "networkInterfaces": [
+          {
+            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('vmnicName'))]"
+          }
+        ]
+      }
+    }
+  }
+],
+  "outputs": {
+  }
+}
