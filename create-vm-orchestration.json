@@ -2,9 +2,33 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "param_vmnetName": {
+      "type": "sting",
+      "defaultValue": "Networkname",
+      "maxLength": "10",
+      "metadata": {
+          "description": "Name for the default network"
+      }
+    },
+    "param_subnetName": {
+      "type": "sting",
+      "defaultValue": "subnetName",
+      "maxLength": "10",
+      "metadata": {
+          "description": "Name for the default subnet"
+      }
+    },
+    "param_secgrpName": {
+      "type": "sting",
+      "defaultValue": "securitygroupName",
+      "maxLength": "15",
+      "metadata": {
+          "description": "Name for the default securitygroup"
+      }
+    },
     "param_vmnicName": {
       "type": "string",
-      "defaultValue": "JacNic",
+      "defaultValue": "NICName",
       "maxLength": "20",
       "metadata": {
         "description": "Name for the virtual NIC interface"
@@ -13,10 +37,10 @@
   },
   "variables": {
     "vmnicName": "[parameters('param_vmnicName')]",
-    "vmnetName": "JacNetwork",
+    "vmnetName": "[parameters('param_vmnetName')]",
     "vmnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmnetName'))]",
-    "subnetName": "JacSubnet",
-    "secgrpName": "JacSecurityGroup"
+    "subnetName": "[parameters('param_subnetName')]",
+    "secgrpName": "[parameters('param_secgrpName')]"
   },
   "resources": [
   {
