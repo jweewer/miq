@@ -2,9 +2,17 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "param_vmnicName": {
+      "type": "string",
+      "defaultValue": "JacNic",
+      "maxLength": "20",
+      "metadata": {
+        "description": "Name for the virtual NIC interface"
+      }
+    }
   },
   "variables": {
-    "vmnicName": "JacNic",
+    "vmnicName": "[parameters('param_vmnicName')]",
     "vmnetName": "JacNetwork",
     "vmnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmnetName'))]",
     "subnetName": "JacSubnet",
@@ -87,41 +95,6 @@
           }
         }
       ]
-    }
-  },
-  {
-    "apiVersion": "2015-06-15",
-    "type": "Microsoft.Compute/virtualMachines",
-    "name": "JacVMthing",
-    "location": "[resourceGroup().location]",
-    "dependsOn": [
-      "[concat('Microsoft.Network/networkInterfaces/', variables('vmnicName'))]"
-      ],
-    "properties": {
-      "hardwareProfile": {
-        "vmSize": "basic_A0"
-      },
-      "storageProfile": {
-        "osDisk": {
-          "name": "JacVMthing-osDisk",
-          "osType": "linux",
-          "caching": "ReadWrite",
-          "createOption": "FromImage",
-          "image": {
-            "uri": "https://proxycustomimages.blob.core.windows.net/customimage/centos-guest-image-7.4-x86_64.vhd"
-          },
-          "vhd": {
-            "uri": "[variables('osDiskVhdName')]"
-          }
-        }
-      },
-      "networkProfile": {
-        "networkInterfaces": [
-          {
-            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('vmnicName'))]"
-          }
-        ]
-      }
     }
   }
 ],
