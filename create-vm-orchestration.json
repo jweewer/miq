@@ -2,6 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+<<<<<<< HEAD
     "param_vmnetName": {
       "type": "sting",
       "defaultValue": "Networkname",
@@ -29,6 +30,11 @@
     "param_vmnicName": {
       "type": "string",
       "defaultValue": "NICName",
+=======
+    "param_vmnicName": {
+      "type": "string",
+      "defaultValue": "JacNic",
+>>>>>>> a149f87a93bb2efc09c939e963ab360d51f1231f
       "maxLength": "20",
       "metadata": {
         "description": "Name for the virtual NIC interface"
@@ -37,7 +43,11 @@
   },
   "variables": {
     "vmnicName": "[parameters('param_vmnicName')]",
+<<<<<<< HEAD
     "vmnetName": "[parameters('param_vmnetName')]",
+=======
+    "vmnetName": "JacNetwork",
+>>>>>>> a149f87a93bb2efc09c939e963ab360d51f1231f
     "vmnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmnetName'))]",
     "subnetName": "[parameters('param_subnetName')]",
     "secgrpName": "[parameters('param_secgrpName')]"
