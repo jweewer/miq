@@ -65,5 +65,5 @@
       name: '{{ dbusername }}'
       password: '{{ dbuserpw }}'
       host: localhost
-      priv: "{{ dbname }}.*:ALTER,SELECT,UPDATE,CREATE,DELETE,DROP"
+      priv: "{{ dbname }}.*:ALTER,SELECT,UPDATE,CREATE,DELETE,DROP,INSERT"
       state: present
