@@ -33,6 +33,16 @@
       "metadata": {
         "description": "Name for the virtual NIC interface"
       }
+    },
+    "param_Flavor":{
+      "allowedValues": [
+        "basic_A0",
+        "basic_A1",
+        "standard_A0",
+        "standard_A1"
+      ],
+      "type": "string",
+      "defaultValue": "basic"
     }
   },
   "variables": {
@@ -40,7 +50,8 @@
     "vmnetName": "[parameters('param_vmnetName')]",
     "vmnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmnetName'))]",
     "subnetName": "[parameters('param_subnetName')]",
-    "secgrpName": "[parameters('param_secgrpName')]"
+    "secgrpName": "[parameters('param_secgrpName')]",
+    "imageName": "CentOS7"
   },
   "resources": [
   {
@@ -119,6 +130,34 @@
           }
         }
       ]
+    }
+  },
+  {
+    "type": "Microsoft.Compute/virtualMachines",
+    "apiVersion": "2016-04-30-preview",
+    "location": "[resourceGroup().location]",
+    "name": "TestVM",
+    "properties": {
+      "hardwareProfile": {
+         "vmSize": "basic_A0"
+      },
+      "storageProfile": {
+        "imageReference": {
+          "id": "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
+        }
+      },
+      "osProfile": {
+        "computerName": "TestVM",
+        "adminUsername": "JustAUsername",
+        "adminPassword": "&uynj6b%49Md83cFDs"
+      },
+      "networkProfile": {
+        "networkInterfaces": [
+          {
+            "id": "[resourceId('Microsoft.Network/NetworkInterfaces', concat(variables('vmnicName')))]"
+          }
+        ]
+      }
     }
   }
 ],
