@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "param_vmnetName": {
-      "type": "sting",
+      "type": "string",
       "defaultValue": "Networkname",
       "maxLength": "10",
       "metadata": {
@@ -11,7 +11,7 @@
       }
     },
     "param_subnetName": {
-      "type": "sting",
+      "type": "string",
       "defaultValue": "subnetName",
       "maxLength": "10",
       "metadata": {
@@ -19,9 +19,9 @@
       }
     },
     "param_secgrpName": {
-      "type": "sting",
+      "type": "string",
       "defaultValue": "securitygroupName",
-      "maxLength": "15",
+      "maxLength": "20",
       "metadata": {
           "description": "Name for the default securitygroup"
       }
