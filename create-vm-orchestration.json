@@ -34,7 +34,23 @@
         "description": "Name for the virtual NIC interface"
       }
     },
-    "param_Flavor":{
+    "param_pubIP": {
+      "type": "string",
+      "defaultValue": "pubIP",
+      "maxLength": "20",
+      "metadata": {
+        "description": "Name for the virtual NIC interface"
+      }
+    },
+    "param_vmName": {
+      "type": "string",
+      "defaultValue": "vmName",
+      "maxLength": "20",
+      "metadata": {
+        "description": "Instance Name"
+      }
+    },
+    "param_vmFlavor": {
       "allowedValues": [
         "basic_A0",
         "basic_A1",
@@ -42,7 +58,10 @@
         "standard_A1"
       ],
       "type": "string",
-      "defaultValue": "basic"
+      "defaultValue": "basic_A0",
+      "metadata": {
+          "description": "Choose the flavor for the instance"
+      }
     }
   },
   "variables": {
@@ -51,6 +70,9 @@
     "vmnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmnetName'))]",
     "subnetName": "[parameters('param_subnetName')]",
     "secgrpName": "[parameters('param_secgrpName')]",
+    "pubIP": "[parameters('param_pubIP')]",
+    "vmName": "[parameters('param_vmName')]",
+    "vmFlavor": "[parameters('param_vmFlavor')]",
     "imageName": "CentOS7"
   },
   "resources": [
@@ -80,7 +102,7 @@
         }
       ],
       "dhcpOptions": {
-        "dnsServers": [ "172.16.2.2" ]
+        "dnsServers": [ "8.8.8.8" ]
       }
     }
   },
@@ -106,7 +128,20 @@
               "priority": 101,
               "direction": "Inbound"
           }
+        },
+        {
+          "name": "HTTP",
+          "properties": {
+            "protocol": "TCP",
+            "sourcePortRange": "*",
+            "destinationPortRange": "80",
+            "sourceAddressPrefix": "*",
+            "destinationAddressPrefix": "*",
+            "access": "Allow",
+            "priority": 102,
+            "direction": "Inbound"
         }
+      }
       ]
     }
   },
@@ -116,7 +151,8 @@
     "name": "[variables('vmnicName')]",
     "location": "[resourceGroup().location]",
     "dependsOn": [
-      "[concat('Microsoft.Network/virtualNetworks/', variables('vmnetName'))]"
+      "[concat('Microsoft.Network/virtualNetworks/', variables('vmnetName'))]",
+      "[concat('Microsoft.Network/publicIpAddresses/', variables('pubIP'))]"
       ],
     "properties": {
       "ipConfigurations": [
@@ -124,6 +160,9 @@
           "name": "ipconfig1",
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
+            "publicIpAddress":{
+                "id": "[resourceId('Microsoft.Network/publicIpAddresses/', variables('pubIP'))]"
+            },
             "subnet": {
               "id": "[concat(variables('vmnetID'), '/subnets/', variables('subnetName'))]"
             }
@@ -133,23 +172,41 @@
     }
   },
   {
+    "name": "[variables('pubIP')]",
+    "type": "Microsoft.Network/publicIpAddresses",
+    "apiVersion": "2017-06-01",
+    "location": "[resourceGroup().location]",
+    "properties": {
+        "publicIpAllocationMethod": "Dynamic"
+    }
+  },
+  {
     "type": "Microsoft.Compute/virtualMachines",
     "apiVersion": "2016-04-30-preview",
     "location": "[resourceGroup().location]",
-    "name": "TestVM",
+    "name": "[variables('vmName')]",
+    "dependsOn": [
+      "[concat('Microsoft.Network/networkInterfaces/', variables('vmnicName'))]"
+    ],
     "properties": {
       "hardwareProfile": {
-         "vmSize": "basic_A0"
+         "vmSize": "[variables('vmFlavor')]"
       },
       "storageProfile": {
         "imageReference": {
-          "id": "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
+          "id": "[resourceId('Microsoft.Compute/images/', variables('imageName'))]"
         }
       },
       "osProfile": {
-        "computerName": "TestVM",
+        "computerName": "[variables('vmName')]",
         "adminUsername": "JustAUsername",
         "adminPassword": "&uynj6b%49Md83cFDs"
+      },
+      "diagnosticsProfile": {
+        "bootDiagnostics": {
+          "enabled": true,
+          "storageUri": "[concat('https', '://', 'resourcegroup1disks141', '.blob.core.windows.net', '/')]"
+          }
       },
       "networkProfile": {
         "networkInterfaces": [
