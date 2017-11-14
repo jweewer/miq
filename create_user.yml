@@ -10,7 +10,7 @@
   - name: Install needed package
     yum:
       state: latest
-      name: ibselinux-python
+      name: libselinux-python
   - name: create the user
     user:
       name: '{{ username }}'
