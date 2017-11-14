@@ -7,6 +7,10 @@
       sudoers: '{{ cf_sudoers }}'
 
   tasks:
+  - name: Install needed package
+    yum:
+      state: latest
+      name: ibselinux-python
   - name: create the user
     user:
       name: '{{ username }}'
