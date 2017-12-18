@@ -1,0 +1,141 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "param_vmnetName": {
+      "type": "string",
+      "defaultValue": "Networkname",
+      "maxLength": "20",
+      "metadata": {
+          "description": "Name for the default network"
+      }
+    },
+    "param_subnetName": {
+      "type": "string",
+      "defaultValue": "subnetName",
+      "maxLength": "20",
+      "metadata": {
+          "description": "Name for the default subnet"
+      }
+    },
+    "param_secgrpName": {
+      "type": "string",
+      "defaultValue": "securitygroupName",
+      "maxLength": "20",
+      "metadata": {
+          "description": "Name for the default securitygroup"
+      }
+    },
+    "param_pubIP": {
+      "type": "string",
+      "defaultValue": "pubIP",
+      "maxLength": "20",
+      "metadata": {
+        "description": "Name for the virtual NIC interface"
+      }
+    },
+    "param_vmFlavor": {
+      "allowedValues": [
+        "basic_A0",
+        "basic_A1",
+        "standard_A0",
+        "standard_A1"
+      ],
+      "type": "string",
+      "defaultValue": "basic_A0",
+      "metadata": {
+          "description": "Choose the flavor for the instance"
+      }
+    }
+  },
+  "variables": {
+    "vmnetName": "[parameters('param_vmnetName')]",
+    "vmnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmnetName'))]",
+    "subnetName": "[parameters('param_subnetName')]",
+    "secgrpName": "[parameters('param_secgrpName')]",
+    "pubIP": "[parameters('param_pubIP')]",
+    "vmFlavor": "[parameters('param_vmFlavor')]"
+  },
+  "resources": [
+  {
+    "apiVersion": "2015-06-15",
+    "type": "Microsoft.Network/virtualNetworks",
+    "name": "[variables('vmnetName')]",
+    "location": "[resourceGroup().location]",
+    "dependson": [
+      "[concat('Microsoft.Network/networkSecurityGroups/', variables('secgrpName'))]"
+    ],
+    "properties": {
+      "addressSpace": {
+        "addressPrefixes": [
+          "172.16.2.0/24"
+        ]
+      },
+      "subnets": [
+        {
+          "name": "[variables('subnetName')]",
+          "properties": {
+            "addressPrefix": "172.16.2.0/24",
+            "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('secgrpName'))]"
+            }
+          }
+        }
+      ],
+      "dhcpOptions": {
+        "dnsServers": [ "8.8.8.8" ]
+      }
+    }
+  },
+  {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('secgrpName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NetworkSecurityGroup"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "SSH",
+            "properties": {
+              "protocol": "TCP",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+          }
+        },
+        {
+          "name": "HTTP",
+          "properties": {
+            "protocol": "TCP",
+            "sourcePortRange": "*",
+            "destinationPortRange": "80",
+            "sourceAddressPrefix": "*",
+            "destinationAddressPrefix": "*",
+            "access": "Allow",
+            "priority": 102,
+            "direction": "Inbound"
+        }
+      }
+      ]
+    }
+  },
+  {
+    "name": "[variables('pubIP')]",
+    "type": "Microsoft.Network/publicIpAddresses",
+    "apiVersion": "2017-06-01",
+    "location": "[resourceGroup().location]",
+    "properties": {
+        "publicIpAllocationMethod": "Dynamic"
+    }
+  }
+],
+  "outputs": {
+  }
+}
