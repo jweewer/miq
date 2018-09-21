@@ -6,6 +6,6 @@
     tasks:
     - name: Install Package
       yum:
-        name: {{ package }}
+        name: "{{ package }}"
         state: present
 
