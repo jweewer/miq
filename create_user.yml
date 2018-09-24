@@ -9,7 +9,7 @@
   tasks:
   - name: Install needed package
     yum:
-      state: latest
+      state: present 
       name: libselinux-python
   - name: create the user
     user:
